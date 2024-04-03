@@ -49,6 +49,9 @@ jobs:
           name: dist-files
 
       - name: Output Directory
+        run: pwd
+
+      - name: Output Directory contents
         run: ls -la
 
       - name: Deploy
