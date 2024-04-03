@@ -1,40 +1,54 @@
 name: Test Project
-on: push
+on:
+  push:
+    branches:
+      - main
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v3
-
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install Dependencies
-        run: npm install
-
+        run: npm ci
       - name: Run Tests
-        run: npm test
-
-  deploy:
+        run: npm run test
+  build:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v3
-
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version: 20
-
       - name: Install Dependencies
         run: npm ci
-
+      - name: Run Build
+        run: npm run build
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: dist-files
+          path: dist # ! Specify the path to the files in the artifact
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Code
+        uses: actions/checkout@v3
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+      - name: Install Dependencies
+        run: npm ci
       - name: Build
         run: npm run build
-
       - name: Deploy
         run: echo "Deploying ..."
