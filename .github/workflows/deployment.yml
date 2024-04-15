@@ -2,7 +2,7 @@ name: Test Project
 on:
   push:
     branches:
-      - main
+      - main_dev
 jobs:
   test:
     name: Run Tests
