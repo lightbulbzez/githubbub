@@ -5,6 +5,7 @@ on:
       - main
 jobs:
   test:
+    name: Run Tests
     runs-on: ubuntu-latest
     steps:
       - name: Get Code
@@ -24,6 +25,7 @@ jobs:
         run: npm run test
   build:
     needs: test
+    name: Build the project
     runs-on: ubuntu-latest
     outputs:
       script-file: ${{ steps.publish.outputs.script-file }}
@@ -58,6 +60,7 @@ jobs:
           #   dist #! Specify the path to the files in the artifact
           #   package.json
   deploy:
+    name: Deplouy to Whatever
     needs: build
     runs-on: ubuntu-latest
     steps:
