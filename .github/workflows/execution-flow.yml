@@ -5,8 +5,8 @@ on:
       - main
 jobs:
   lint:
-    name: Run Tests
     runs-on: ubuntu-latest
+    name: Run Lint
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -22,6 +22,7 @@ jobs:
         run: npm run lint
   test:
     runs-on: ubuntu-latest
+    name: Run Test
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -34,8 +35,10 @@ jobs:
       - name: Install dependencies
         run: npm ci
       - name: Test code
+        id: run-test
         run: npm run test
       - name: Upload test report
+        if: failure() && steps.run-test.outcome == 'failure'
         uses: actions/upload-artifact@v3
         with:
           name: test-report
@@ -43,6 +46,7 @@ jobs:
   build:
     needs: test
     runs-on: ubuntu-latest
+    name: Run Build
     steps:
       - name: Get code
         uses: actions/checkout@v3
@@ -65,6 +69,7 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    name: Run Deploy
     steps:
       - name: Get build artifacts
         uses: actions/download-artifact@v3
@@ -74,3 +79,11 @@ jobs:
         run: ls
       - name: Deploy
         run: echo "Deploying..."
+  report:
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Output test report
+        run: |
+          echo "Something went wrong"
+          echo "${{ github }}"
