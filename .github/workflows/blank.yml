@@ -10,4 +10,4 @@ jobs:
           echo "Hello World Zare"
 
       - name: Print Goodbye
-        run: echo "Bye bye"
+        run: echo "Bye bye z"
